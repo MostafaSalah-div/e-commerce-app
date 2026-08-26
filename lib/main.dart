@@ -38,6 +38,8 @@ import 'features/orders/presentation/cubit/orders_cubit.dart';
 import 'features/orders/repository/orders_repository.dart';
 
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/profile/presentation/cubit/settings_cubit.dart';
+import 'features/profile/presentation/cubit/settings_state.dart';
 import 'features/checkout/presentation/cubit/checkout_cubit.dart';
 
 void main() async {
@@ -79,6 +81,7 @@ void main() async {
     cartRepository: cartRepository,
     wishlistRepository: wishlistRepository,
     ordersRepository: ordersRepository,
+    sharedPreferences: sharedPreferences,
   ));
 }
 
@@ -88,6 +91,7 @@ class MyApp extends StatelessWidget {
   final CartRepository cartRepository;
   final WishlistRepository wishlistRepository;
   final OrdersRepository ordersRepository;
+  final SharedPreferences sharedPreferences;
 
   const MyApp({
     super.key,
@@ -96,6 +100,7 @@ class MyApp extends StatelessWidget {
     required this.cartRepository,
     required this.wishlistRepository,
     required this.ordersRepository,
+    required this.sharedPreferences,
   });
 
   @override
@@ -112,12 +117,20 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => OrdersCubit(ordersRepository)..getOrders()),
         BlocProvider(create: (_) => ProfileCubit(authRepository)),
         BlocProvider(create: (_) => CheckoutCubit()),
+        BlocProvider(create: (_) => SettingsCubit(sharedPreferences)),
       ],
-      child: MaterialApp.router(
-        title: 'Ecommerce App',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        routerConfig: AppRouter.router,
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Ecommerce App',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: state.themeMode,
+            locale: state.locale,
+            routerConfig: AppRouter.router,
+          );
+        },
       ),
     );
   }

@@ -23,12 +23,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: Icon(
+              Icons.logout,
+              color: colorScheme.onSurface,
+            ),
             onPressed: () {
               context.read<AuthCubit>().logout();
               context.go('/login');
@@ -51,44 +57,67 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 20),
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage(user.image),
+                    backgroundColor: colorScheme.primary,
+                    backgroundImage: user.image.isNotEmpty
+                        ? NetworkImage(user.image)
+                        : null,
+                    child: user.image.isEmpty
+                        ? const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
                   const SizedBox(height: 20),
                   Text(
                     '${user.firstName} ${user.lastName}',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
                   ),
                   Text(
                     user.email,
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 30),
                   _buildProfileItem(
+                    context,
                     icon: Icons.shopping_bag,
                     title: 'My Orders',
                     onTap: () => context.push('/orders'),
+                    colorScheme: colorScheme,
                   ),
                   _buildProfileItem(
+                    context,
                     icon: Icons.favorite,
                     title: 'My Wishlist',
-                    onTap: () {
-                      // Handled by Main Page navigation usually, but can push
-                    },
+                    onTap: () => context.push('/wishlist'),
+                    colorScheme: colorScheme,
                   ),
                   _buildProfileItem(
+                    context,
                     icon: Icons.location_on,
                     title: 'Shipping Address',
                     onTap: () {},
+                    colorScheme: colorScheme,
                   ),
                   _buildProfileItem(
+                    context,
                     icon: Icons.payment,
                     title: 'Payment Methods',
                     onTap: () {},
+                    colorScheme: colorScheme,
                   ),
                   _buildProfileItem(
+                    context,
                     icon: Icons.settings,
                     title: 'Settings',
-                    onTap: () {},
+                    onTap: () => context.push('/settings'),
+                    colorScheme: colorScheme,
                   ),
                 ],
               ),
@@ -100,17 +129,28 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileItem({
+  Widget _buildProfileItem(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    required ColorScheme colorScheme,
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).primaryColor),
-        title: Text(title),
-        trailing: const Icon(Icons.chevron_right),
+        leading: Icon(
+          icon,
+          color: colorScheme.onSurface,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(color: colorScheme.onSurface),
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: colorScheme.onSurfaceVariant,
+        ),
         onTap: onTap,
       ),
     );
