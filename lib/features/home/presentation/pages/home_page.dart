@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../products/presentation/bloc/products_bloc.dart';
 import '../../../products/presentation/bloc/products_event.dart';
 import '../../../products/presentation/bloc/products_state.dart';
-import '../../../products/presentation/cubit/category_cubit.dart';
-import '../../../products/presentation/cubit/category_state.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/utils/category_helper.dart';
 import '../widgets/home_header.dart';
@@ -20,6 +18,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
+
+  final List<String> _staticCategories = [
+    'beauty',
+    'fragrances',
+    'furniture',
+    'groceries',
+    'home-decoration',
+    'laptops',
+    'mens-shoes',
+    'mens-watches',
+  ];
 
   @override
   void initState() {
@@ -47,12 +56,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             context.read<ProductsBloc>().add(const LoadProducts(refresh: true));
-            context.read<CategoryCubit>().getCategories();
           },
           child: CustomScrollView(
             controller: _scrollController,
@@ -86,23 +97,16 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
               SliverToBoxAdapter(
-                child: BlocBuilder<CategoryCubit, CategoryState>(
-                  builder: (context, state) {
-                    if (state is CategoryLoaded) {
-                      return SizedBox(
-                        height: 100,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: state.categories.length,
-                          itemBuilder: (context, index) {
-                            return _buildCategoryItem(state.categories[index]);
-                          },
-                        ),
-                      );
-                    }
-                    return const SizedBox(height: 100);
-                  },
+                child: SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _staticCategories.length,
+                    itemBuilder: (context, index) {
+                      return _buildCategoryItem(_staticCategories[index], colorScheme, textTheme);
+                    },
+                  ),
                 ),
               ),
               SliverToBoxAdapter(child: _buildSectionTitle('Popular Products', null)),
@@ -158,7 +162,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCategoryItem(String category) {
+  Widget _buildCategoryItem(String category, ColorScheme colorScheme, TextTheme textTheme) {
     return GestureDetector(
       onTap: () {
         context.read<ProductsBloc>().add(LoadProductsByCategory(category));
@@ -170,19 +174,21 @@ class _HomePageState extends State<HomePage> {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: Colors.blue.shade100,
+              backgroundColor: colorScheme.primaryContainer,
               child: Icon(
                 CategoryHelper.getCategoryIcon(category),
-                color: Colors.blue,
+                color: colorScheme.primary,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Text(
               category,
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12),
+              style: textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),

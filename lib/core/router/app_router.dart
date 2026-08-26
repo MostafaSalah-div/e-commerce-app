@@ -10,6 +10,8 @@ import '../../features/products/presentation/pages/product_details_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_page.dart';
+import '../../features/profile/presentation/pages/settings_page.dart';
 import '../../features/products/data/models/product_model.dart';
 
 class AppRouter {
@@ -58,6 +60,14 @@ class AppRouter {
       GoRoute(
         path: '/orders',
         builder: (context, state) => const OrdersPage(),
+      ),
+      GoRoute(
+        path: '/wishlist',
+        builder: (context, state) => const WishlistPage(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
       ),
     ],
   );
