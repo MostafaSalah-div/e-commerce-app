@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedCategoryIndex = -1;
   final ScrollController _scrollController = ScrollController();
 
   final List<String> _staticCategories = [
@@ -98,13 +99,13 @@ class _HomePageState extends State<HomePage> {
               ),
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100,
+                  height: 110,
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     scrollDirection: Axis.horizontal,
                     itemCount: _staticCategories.length,
                     itemBuilder: (context, index) {
-                      return _buildCategoryItem(_staticCategories[index], colorScheme, textTheme);
+                      return _buildCategoryItem(index, _staticCategories[index], colorScheme, textTheme);
                     },
                   ),
                 ),
@@ -162,9 +163,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCategoryItem(String category, ColorScheme colorScheme, TextTheme textTheme) {
+  Widget _buildCategoryItem(int index, String category, ColorScheme colorScheme, TextTheme textTheme) {
     return GestureDetector(
       onTap: () {
+        setState(() {
+          _selectedCategoryIndex = index;
+        });
         context.read<ProductsBloc>().add(LoadProductsByCategory(category));
       },
       child: Container(
@@ -172,12 +176,24 @@ class _HomePageState extends State<HomePage> {
         margin: const EdgeInsets.only(right: 12),
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: colorScheme.primaryContainer,
-              child: Icon(
-                CategoryHelper.getCategoryIcon(category),
-                color: colorScheme.primary,
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: _selectedCategoryIndex == index
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.transparent,
+                  width: 2.5,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: colorScheme.primaryContainer,
+                child: Icon(
+                  CategoryHelper.getCategoryIcon(category),
+                  color: colorScheme.primary,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -187,7 +203,7 @@ class _HomePageState extends State<HomePage> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
+                fontWeight: _selectedCategoryIndex == index ? FontWeight.bold : FontWeight.w500,
               ),
             ),
           ],
