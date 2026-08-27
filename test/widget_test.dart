@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerceapp/core/error/failures.dart';
+import 'package:ecommerceapp/e_commerce_app.dart';
 import 'package:ecommerceapp/features/auth/data/models/user_model.dart';
 import 'package:ecommerceapp/features/auth/repository/auth_repository.dart';
 import 'package:ecommerceapp/features/cart/data/models/cart_item_model.dart';
@@ -96,7 +97,7 @@ void main() {
 
     // Build our app and trigger a frame.
     // Fixed: Removed 'const' and passed all required dependencies.
-    await tester.pumpWidget(MyApp(
+    await tester.pumpWidget(ECommerceApp(
       authRepository: authRepository,
       productsRepository: productsRepository,
       cartRepository: cartRepository,
