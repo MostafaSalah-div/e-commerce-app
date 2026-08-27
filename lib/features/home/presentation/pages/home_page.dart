@@ -94,7 +94,11 @@ class _HomePageState extends State<HomePage> {
               const SliverToBoxAdapter(child: PromoBanner()),
               SliverToBoxAdapter(
                 child: _buildSectionTitle('Categories', () {
-                  // Navigation handled by MainPage
+                  setState(() {
+                    _selectedCategoryIndex = -1; // Reset category selection
+                  });
+                  // Load all products again
+                  context.read<ProductsBloc>().add(const LoadProducts());
                 }),
               ),
               SliverToBoxAdapter(
@@ -119,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   if (state.status == ProductsStatus.failure) {
                     return SliverFillRemaining(child: Center(child: Text(state.errorMessage ?? 'Error')));
                   }
-                  
+
                   return SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: SliverGrid(
@@ -130,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisSpacing: 16,
                       ),
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                            (context, index) {
                           if (index >= state.products.length) {
                             return const Center(child: CircularProgressIndicator());
                           }
@@ -157,7 +161,16 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           if (onTap != null)
-            TextButton(onPressed: onTap, child: const Text('See All')),
+            GestureDetector(
+              onTap: onTap,
+              child: Text(
+                'See All',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
         ],
       ),
     );

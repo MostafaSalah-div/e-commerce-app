@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../home/presentation/pages/home_page.dart';
-import '../../../products/presentation/pages/categories_page.dart';
 import '../../../wishlist/presentation/pages/wishlist_page.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
@@ -18,7 +16,6 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const CategoriesPage(),
     const WishlistPage(),
     const CartPage(),
     const ProfilePage(),
@@ -54,11 +51,6 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category_outlined),
-            activeIcon: Icon(Icons.category),
-            label: 'Categories',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_outline),

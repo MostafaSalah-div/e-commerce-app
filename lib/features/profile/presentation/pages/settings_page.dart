@@ -46,81 +46,10 @@ class SettingsPage extends StatelessWidget {
                   context.read<SettingsCubit>().toggleTheme();
                 },
               ),
-              const Divider(),
-              Text(
-                'Language',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  'Localization',
-                  style: TextStyle(color: colorScheme.onSurface),
-                ),
-                subtitle: Text(
-                  state.locale.languageCode == 'en' ? 'English' : 'Arabic',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
-                ),
-                leading: Icon(
-                  Icons.language,
-                  color: colorScheme.onSurface,
-                ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                onTap: () {
-                  _showLanguageDialog(context);
-                },
-              ),
             ],
           );
         },
       ),
-    );
-  }
-
-  void _showLanguageDialog(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: colorScheme.surface,
-          title: Text(
-            'Select Language',
-            style: TextStyle(color: colorScheme.onSurface),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text(
-                  'English',
-                  style: TextStyle(color: colorScheme.onSurface),
-                ),
-                onTap: () {
-                  context.read<SettingsCubit>().setLocale(const Locale('en'));
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text(
-                  'Arabic',
-                  style: TextStyle(color: colorScheme.onSurface),
-                ),
-                onTap: () {
-                  context.read<SettingsCubit>().setLocale(const Locale('ar'));
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

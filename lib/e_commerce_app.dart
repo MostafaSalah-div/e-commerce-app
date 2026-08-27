@@ -61,7 +61,6 @@ class _AppView extends StatelessWidget {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: state.themeMode,
-          locale: state.locale,
           routerConfig: AppRouter.router,
         );
       },
