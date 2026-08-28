@@ -16,6 +16,8 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
+
 
   @override
   void dispose() {
@@ -49,15 +51,31 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 20),
           TextFormField(
             controller: _passwordController,
+            obscureText: !_isPasswordVisible,
             decoration: InputDecoration(
               labelText: 'Password',
               prefixIcon: const Icon(Icons.lock_outline),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-            obscureText: true,
-            validator: (value) => value!.isEmpty ? 'Please enter your password' : null,
-          ),
-          Align(
+            validator: (value) =>
+            value == null || value.isEmpty
+                ? 'Please enter your password'
+                : null,
+          ),          Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () => context.push('/forgot-password'),

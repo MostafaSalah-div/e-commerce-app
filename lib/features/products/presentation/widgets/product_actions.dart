@@ -1,3 +1,4 @@
+import 'package:ecommerceapp/features/products/presentation/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,9 +16,7 @@ class ProductActions extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           context.read<CartCubit>().addToCart(product);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Product successfully added to cart.')),
-          );
+          CustomSnackBar.show(context);
         },
         child: const Text('Add to Cart'),
       ),
